@@ -2,6 +2,7 @@ package com.muhammet.satis.service;
 
 import com.muhammet.satis.dto.request.PersonelLoginRequestDto;
 import com.muhammet.satis.dto.request.PersonelRegisterRequestDto;
+import com.muhammet.satis.dto.response.LoginResponseDto;
 import com.muhammet.satis.entity.Personel;
 import com.muhammet.satis.exception.ErrorType;
 import com.muhammet.satis.exception.SatisServiceException;
@@ -15,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersonelService {
     private final PersonelRepository repository;
-
     public void save(PersonelRegisterRequestDto dto) {
         repository.save(
                 Personel.builder()
@@ -26,11 +26,15 @@ public class PersonelService {
         );
     }
 
-    public String login(PersonelLoginRequestDto dto){
+    public LoginResponseDto login(PersonelLoginRequestDto dto){
         Optional<Personel> personelOptional = repository.findOptionalByUsernameAndPassword(dto.getUsername(),dto.getPassword());
         if (personelOptional.isEmpty())
             throw new SatisServiceException(ErrorType.ERROR_INVALID_LOGIN_PARAMETER);
-        return "Token: "+personelOptional.get().getId();
+        return LoginResponseDto.builder()
+                .image(personelOptional.get().getAvatar())
+                .name(personelOptional.get().getAdsoyad())
+                .userName(personelOptional.get().getUsername())
+                .token("Token: "+personelOptional.get().getId())
+                .build();
     }
-
 }
