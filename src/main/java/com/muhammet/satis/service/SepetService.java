@@ -79,7 +79,7 @@ public class SepetService {
                             .adet(s.getAdet())
                             .fiyat(urun.get().getFiyat())
                             .resim(urun.get().getResim())
-                            .toplamFiyat(s.getToplamFiyat())
+                            .toplamFiyat(s.getAdet()*s.getFiyat())
                             .urunId(urun.get().getId())
                             .build()
             );
